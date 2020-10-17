@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Snaaake!</title>
+    </head>
+    <body onload="field.prepGame()" onresize="field.prepGame()" id="body" style="visibility:hidden;">
+        <noscript>
+          <div>
+            This site requires JavaScript. I will only be visible if you have it disabled.
+          </div>
+          ...
+        </noscript>
+        <!-- <div id="menu_container"><p onclick="field.start()">Begin</p></div> -->
+        <canvas id="canvas">Your browser does not support HTML5 :(</canvas>
+        <script type="text/javascript" src="snake.js"/></script>
+        <div class="postCanvas">
+            <p>controls: [↑,↓,←,→] or [w,s,a,d]<br>space = pause</p>
+            <h1><span id="score">0</span></h1>
+        <a href="https://github.com/austinwadedev/snake" style="padding-left:40px;color:white;">Code on github</a>
+        </div>
+    </body>
+</html>
