@@ -46,7 +46,7 @@ int printByteArray(unsigned char *data, int dataLength, int characters, char des
         return -1;
     }
 
-    printf("\n%s: ", desc);
+    printf("\n%s: \n", desc);
 
     if (characters)
         for (int i = 0; i < dataLength; i++)
