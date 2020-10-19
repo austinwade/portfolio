@@ -17,5 +17,6 @@ int main(int argc, char *argv[])
     /* run encryption routine and print results */
     result = LFSR(result, dataLength, 0x12345678);
     printByteArray(result, dataLength, 1, "DECRYPTED CIPHERTEXT");
+    
     printf("\n");
 }
