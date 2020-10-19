@@ -4,7 +4,7 @@
 
 unsigned char *Crypt(unsigned char *data, int dataLength, unsigned int initialValue);
 
-int printByteArray(unsigned char *data, int len, int characters);
+int printByteArray(unsigned char *data, int len, int characters, char desc[]);
 
 int printMagicBytes(FILE *file, unsigned int bytes);
 

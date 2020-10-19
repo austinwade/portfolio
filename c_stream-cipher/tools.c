@@ -38,12 +38,15 @@ unsigned char *Crypt(unsigned char *data, int dataLength, unsigned int initialVa
     return res;
 }
 
-int printByteArray(unsigned char *data, int dataLength, int characters)
+int printByteArray(unsigned char *data, int dataLength, int characters, char desc[])
 {
     if (!data || !dataLength || characters < 0) {
         printf("couldn't print byte array\n");
         return -1;
     }
+
+    printf("%s\n********\n", desc);
+
     if (characters)
     {
         for (int i = 0; i < dataLength; i++)
@@ -58,7 +61,7 @@ int printByteArray(unsigned char *data, int dataLength, int characters)
             printf("\\x%02X", data[i] & 0xff);
         }
     }
-    printf("\n");
+    printf("\n********\n\n");
     return 1;
 }
 
@@ -86,7 +89,7 @@ int printMagicBytes(FILE *file, unsigned int bytes)
         printf("couldn't print magic bytes");
         return 0;
     }
-    printByteArray(fileData, bytes, 1);
+    printByteArray(fileData, bytes, 1, "");
     printf("\n");
     return 1;
 }
