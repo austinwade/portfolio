@@ -231,34 +231,40 @@ void genRandBoard(unsigned short board[9][9])
         for (int j = 0; j < 9; j++)
         {
             // for (int k=0; k<3; k++) {
-                unsigned short val = rand() % 10;
-                bool legal = false;
-                if (is_legal(board, i, j, val)) {
-                    board[i][j] = val;
-                    // printf("board[%d, %d] = %d\n", i, j, val);
-                    // break;
-                }
+            unsigned short val = rand() % 10;
+            bool legal = false;
+            if (is_legal(board, i, j, val))
+            {
+                board[i][j] = val;
+                // printf("board[%d, %d] = %d\n", i, j, val);
+                // break;
+            }
             // }
-            
         }
     }
     printBoard(board);
     // if (!solve(board, NULL))
-        // genRandBoard(board);
+    // genRandBoard(board);
     // printf("not good\n");
 }
 
-void initBoard(unsigned short board[9][9]) {
-    for (int i=0; i<9; i++) {
-        for (int j=0; j<9; j++) {
+void initBoard(unsigned short board[9][9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
             board[i][j] = 0;
         }
     }
 }
 
-void copyBoard(unsigned short board1[9][9], unsigned short board2[9][9]) {
-    for (int i=0; i<9; i++) {
-        for (int j=0; j<9; j++) {
+void copyBoard(unsigned short board1[9][9], unsigned short board2[9][9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
             board2[i][j] = board1[i][j];
         }
     }
@@ -273,14 +279,14 @@ int main(void)
     // unsigned short board[9][9];
     unsigned short board[9][9] = {
         {1, 2, 3, 4, 5, 6, 7, 8, 9},
-        {4, 5, 6, 7, 8, 9, 1, 2, 3,},
-        {7, 8, 9, 1, 2, 3, 4, 5, 6,},
-        {2, 1, 4, 3, 6, 5, 8, 9, 7,},
-        {3, 6, 5, 8, 9, 7, 2, 1, 4,},
-        {8, 9, 7, 2, 1, 4, 3, 6, 5,},
-        {5, 3, 1, 6, 4, 2, 9, 7, 8,},
-        {6, 4, 2, 9, 7, 8, 5, 3, 1,},
-        {9, 7, 8, 5, 3, 1, 6, 4, 2,},
+        {4, 5, 6, 7, 8, 9, 1, 2, 3},
+        {7, 8, 9, 1, 2, 3, 4, 5, 6},
+        {2, 1, 4, 3, 6, 5, 8, 9, 7},
+        {3, 6, 5, 8, 9, 7, 2, 1, 4},
+        {8, 9, 7, 2, 1, 4, 3, 6, 5},
+        {5, 3, 1, 6, 4, 2, 9, 7, 8},
+        {6, 4, 2, 9, 7, 8, 5, 3, 1},
+        {9, 7, 8, 5, 3, 1, 6, 4, 2},
     };
     // initBoard(board);
     unsigned short board_solution[9][9];
