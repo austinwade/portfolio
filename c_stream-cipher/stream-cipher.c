@@ -3,8 +3,6 @@
 
 int main(int argc, char *argv[])
 {
-    printf("This program encrypts the word \"apple\" then decrypts it using a stream cipher.\n\n");
-
     /* initialize string as data source */
     unsigned char data[] = "\
         This is a paragraph. I love writing paragraphs. \n\
