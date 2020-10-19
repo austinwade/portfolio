@@ -123,7 +123,7 @@ let field = {
         field.snacks = [];
         field.obstacles = [];
         if (this.canvas == null) {
-            this.canvas = document.getElementById("canvas");
+            this.canvas = document.querySelector("canvas");
         }
         this.canvas.width = (window.innerWidth-field.delta) - (window.innerWidth)%field.delta;
         this.canvas.height = (window.innerHeight-field.delta) - (window.innerHeight)%field.delta;
