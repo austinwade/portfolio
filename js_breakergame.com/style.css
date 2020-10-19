@@ -8,8 +8,9 @@
     body {
         margin: 0;
         /* overflow: hidden; */
-        background-color:#635b57;
+        background-color:#0e0d0d;
         font-family: sans-serif;
+        /* overflow:hidden; */
         visibility: hidden;
     }
     canvas {
@@ -41,12 +42,13 @@
         text-align: center;
     }
 
-    #score {
-        margin-left:27px;
+    .score {
+        margin-left:50px;
         font-weight: bold;
         position: absolute;
         bottom: 43px;
         font-size: 25px;
+        float:left;
     }
 
 

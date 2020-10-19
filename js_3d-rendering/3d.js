@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 // setup canvas
 const canvas = document.getElementById("canvas");

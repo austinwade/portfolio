@@ -3,33 +3,33 @@
 #include <stdbool.h>
 #include <time.h>
 
-// typedef int board[81];
-bool valIn(int arr[], int val)
+// typedef unsigned short board[81];
+bool valIn(unsigned short arr[], unsigned short val)
 {
-    for (int j = 0; j < 9; j++)
+    for (unsigned short j = 0; j < 9; j++)
         if (arr[j] == val)
             return true;
     return false;
 }
 
-bool is_legal(int board[9][9], int row, int col, int val)
+bool is_legal(unsigned short board[9][9], unsigned short row, unsigned short col, unsigned short val)
 {
     // row
     if (valIn(board[row], val))
         return false;
     // col
-    int column[9];
-    for (int i = 0; i < 9; i++)
+    unsigned short column[9];
+    for (unsigned short i = 0; i < 9; i++)
         column[i] = board[i][col];
     if (valIn(column, val))
         return false;
 
     // sub-box of 9
-    int row_sub = (row / 3) * 3;
-    int col_sub = (col / 3) * 3;
-    for (int i = row_sub; i < row_sub + 3; i++)
+    unsigned short row_sub = (row / 3) * 3;
+    unsigned short col_sub = (col / 3) * 3;
+    for (unsigned short i = row_sub; i < row_sub + 3; i++)
     {
-        for (int j = col_sub; j < col_sub + 3; j++)
+        for (unsigned short j = col_sub; j < col_sub + 3; j++)
         {
             if (board[i][j] == val)
                 return false;
@@ -38,10 +38,14 @@ bool is_legal(int board[9][9], int row, int col, int val)
     return true;
 }
 
-bool hasUnassigned(int board[9][9], int *row, int *col) {
-    for (int i=0; i<9; i++) {
-        for (int j=0; j<9; j++) {
-            if (board[i][j] == 0) {
+bool hasUnassigned(unsigned short board[9][9], unsigned short *row, unsigned short *col)
+{
+    for (unsigned short i = 0; i < 9; i++)
+    {
+        for (unsigned short j = 0; j < 9; j++)
+        {
+            if (board[i][j] == 0)
+            {
                 *row = i;
                 *col = j;
                 return true;
@@ -51,12 +55,12 @@ bool hasUnassigned(int board[9][9], int *row, int *col) {
     return false;
 }
 
-bool check9(int arr[])
+bool check9(unsigned short arr[])
 {
-    for (int i = 0; i < 9; i++)
+    for (unsigned short i = 0; i < 9; i++)
     {
         bool found = false;
-        for (int j = 0; j < 9; j++)
+        for (unsigned short j = 0; j < 9; j++)
         {
             if (arr[j] == 0)
                 return false;
@@ -74,12 +78,12 @@ bool check9(int arr[])
     return true;
 }
 
-void printBoard(int board[9][9])
+void printBoard(unsigned short board[9][9])
 {
     printf("\n");
-    for (int row = 0; row < 9; row++)
+    for (unsigned short row = 0; row < 9; row++)
     {
-        for (int col = 0; col < 9; col++)
+        for (unsigned short col = 0; col < 9; col++)
         {
             if (board[row][col])
                 printf("%d ", board[row][col]);
@@ -96,36 +100,32 @@ void printBoard(int board[9][9])
     printf("\n");
 }
 
-bool isSolved(int board[9][9])
+bool isSolved(unsigned short board[9][9])
 {
     // check rows
-    for (int i = 0; i < 9; i++)
-    {
+    for (unsigned short i = 0; i < 9; i++)
         if (check9(board[i]) == false)
             return false;
-    }
 
     // columns
-    for (int i = 0; i < 9; i++)
+    for (unsigned short i = 0; i < 9; i++)
     {
-        int column[9];
-        for (int j = 0; j < 9; j++)
+        unsigned short column[9];
+        for (unsigned short j = 0; j < 9; j++)
             column[j] = board[0][j];
         if (check9(column) == false)
             return false;
     }
 
     // 9 sub-boxes
-    for (int i = 0; i < 3; i++)
+    for (unsigned short i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (unsigned short j = 0; j < 3; j++)
         {
-            int box[9];
-            for (int di = 0; di < 3; di++)
-            {
-                for (int dj = 0; dj < 3; dj++)
+            unsigned short box[9];
+            for (unsigned short di = 0; di < 3; di++)
+                for (unsigned short dj = 0; dj < 3; dj++)
                     box[di + (3 * dj)] = board[i + 3 * di][j + 3 * dj];
-            }
             if (check9(box) == false)
                 return false;
         }
@@ -134,183 +134,157 @@ bool isSolved(int board[9][9])
     return true;
 }
 
-void clearCells(int board[9][9], int prob)
+void clearCells(unsigned short board[9][9], unsigned short prob)
 {
-    for (int i = 0; i < 9; i++)
-        for (int j = 0; j < rand() % 20; j++)
-                board[i][rand() % 10] = 0;
+    for (unsigned short i = 0; i < 9; i++)
+        for (unsigned short j = 0; j < rand() % 20; j++)
+            board[i][rand() % 10] = 0;
 }
 
-void transposeColumns(int board[9][9], int col1, int col2) {
-    int col_temp[9];
-    for (int row=0; row<9; row++) {
+void transposeColumn(unsigned short board[9][9], unsigned short col1, unsigned short col2)
+{
+    unsigned short col_temp[9];
+    for (unsigned short row = 0; row < 9; row++)
         col_temp[row] = board[row][col1];
-    }
-    for (int row=0; row<9; row++) {
+    for (unsigned short row = 0; row < 9; row++)
         board[row][col1] = board[row][col2];
-    }
-    for (int row=0; row<9; row++) {
+    for (unsigned short row = 0; row < 9; row++)
         board[row][col2] = col_temp[row];
-    }
 }
 
-void transposeRows(int board[9][9], int row1, int row2) {
-    int row_temp[9];
-    for (int col=0; col<9; col++) {
+void transposeRow(unsigned short board[9][9], unsigned short row1, unsigned short row2)
+{
+    unsigned short row_temp[9];
+    for (unsigned short col = 0; col < 9; col++)
         row_temp[col] = board[row1][col];
-    }
-    for (int col=0; col<9; col++) {
+    for (unsigned short col = 0; col < 9; col++)
         board[row1][col] = board[row2][col];
-    }
-    for (int col=0; col<9; col++) {
+    for (unsigned short col = 0; col < 9; col++)
         board[row2][col] = row_temp[col];
-    }
 }
 
-bool solve(int board[9][9], int *difficulty)
+bool solve(unsigned short board[9][9], unsigned short *difficulty)
 {
     *difficulty += 1;
     if (isSolved(board) == true)
         return true;
-    int row, col;
-    if (!hasUnassigned(board, &row, &col)) return true;
-    for (int i=1; i<=9; i++) {
-        if (is_legal(board, row, col, i)) {
+    unsigned short row, col;
+    if (!hasUnassigned(board, &row, &col))
+        return true;
+    for (unsigned short i = 1; i <= 9; i++)
+    {
+        if (is_legal(board, row, col, i))
+        {
             board[row][col] = i;
             if (solve(board, difficulty))
                 return true;
-            
             board[row][col] = 0;
         }
     }
     return false;
 }
 
+void randTransposeColumns(unsigned short board[9][9], unsigned short freq)
+{
+    for (unsigned short i = 0; i < rand() % freq; i++)
+    {
+        unsigned short randFrom, randTo;
+        do
+        {
+            randFrom = ((((rand() % 8)) / 3) * 3) + rand() % 3;
+            randTo = (randFrom / 3) * 3 + rand() % 3;
+        } while (randFrom == randTo);
+        // printf("randFrom - %d, randTo - %d\n", randFrom, randTo);
+        transposeColumn(board, randFrom, randTo);
+    }
+}
+
+void randTransposeRows(unsigned short board[9][9], unsigned short freq)
+{
+    for (unsigned short i = 0; i < rand() % freq; i++)
+    {
+        unsigned short randFrom, randTo;
+        do
+        {
+            randFrom = ((((rand() % 8)) / 3) * 3) + rand() % 3;
+            randTo = (randFrom / 3) * 3 + rand() % 3;
+        } while (randFrom == randTo);
+        // printf("randFrom - %d, randTo - %d\n", randFrom, randTo);
+        transposeRow(board, randFrom, randTo);
+    }
+}
+
+void randTransposeColsAndRows(unsigned short board[9][9])
+{
+    int freq = 999;
+    for (int i = 0; i < freq; i++)
+    {
+        randTransposeColumns(board, freq);
+        randTransposeRows(board, freq);
+    }
+}
+
+void genRandBoard(unsigned short board[9][9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            // for (int k=0; k<3; k++) {
+                unsigned short val = rand() % 10;
+                bool legal = false;
+                if (is_legal(board, i, j, val)) {
+                    board[i][j] = val;
+                    printf("board[%d, %d] = %d\n", i, j, val);
+                    // break;
+                }
+            // }
+            
+        }
+    }
+    printBoard(board);
+    // if (!solve(board, NULL))
+        // genRandBoard(board);
+    printf("not good\n");
+}
+
+void initBoard(unsigned short board[9][9]) {
+    for (int i=0; i<9; i++) {
+        for (int j=0; j<9; j++) {
+            board[i][j] = 0;
+        }
+    }
+}
+
+void copyBoard(unsigned short board1[9][9], unsigned short board2[9][9]) {
+    for (int i=0; i<9; i++) {
+        for (int j=0; j<9; j++) {
+            board2[i][j] = board1[i][j];
+        }
+    }
+}
+
 int main(void)
 {
     srand(time(NULL));
 
-    int board[9][9] = {
-        {
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-        },
-        {
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-            2,
-            3,
-        },
-        {
-            7,
-            8,
-            9,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-        },
-        {
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-        },
-        {
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-            2,
-            3,
-            4,
-        },
-        {
-            8,
-            9,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-        },
-        {
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-            2,
-        },
-        {
-            6,
-            7,
-            8,
-            9,
-            1,
-            2,
-            3,
-            4,
-            5,
-        },
-        {
-            9,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-        },
-    };
+    unsigned short difficulty = 0;
 
+    unsigned short board[9][9];
+    initBoard(board);
+    unsigned short board_solution[9][9];
+
+    genRandBoard(board);
     // printBoard(board);
-    // printf("solved %s\n", solve(board) ? "true" : "false");
 
-    int difficulty = 0;
+    // random transpositions
+    // randTransposeColsAndRows(board);
 
-    // random transposition
-    for (int i=0; i<rand()%100; i++) {
-        int randFrom;
-        int randTo;
-        transposeColumns(board, rand()%8, rand()%8);
-    }
-    for (int i=0; i<rand()%100; i++) {
-        transposeRows(board, rand()%8, rand()%8);
-    }
+    // solve(board, &difficulty);
+    // printBoard(board);
 
-    clearCells(board, 1);
-    printBoard(board);
-    solve(board, &difficulty);
+    // clearCells(board, 1);
+    // printBoard(board);
 
-    printBoard(board);
-    printf("difficulty %d\n\n", difficulty);
+    // printf("Dancing Links solution steps (difficulty): %d\n\n", difficulty);
 }

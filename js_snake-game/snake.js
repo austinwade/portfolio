@@ -1,4 +1,5 @@
-"use strict";
+"use strict"
+
 let field = {
     hideMenu : function() {
         document.getElementById("menu_container").style.visibility = "hidden";
@@ -128,7 +129,7 @@ let field = {
         this.canvas.height = (window.innerHeight-field.delta) - (window.innerHeight)%field.delta;
         this.context = this.canvas.getContext("2d");
 
-        document.getElementById("body").style.visibility = "visible"
+        document.body.style.visibility = "visible"
 
         mySnake = new snake(field.canvas.width/2 - (field.canvas.width/2)%field.delta, field.canvas.height/2 - (field.canvas.height/2)%field.delta);
         field.genObstacles(field.canvas.width*field.canvas.height/20000, 8);
@@ -376,3 +377,9 @@ document.onkeydown = function(e) {
         else mySnake.speedX = mySnake.speed;
     }
 };
+
+// run
+(()=>{
+    document.body.onload = field.prepGame()
+    document.body.onresize = field.prepGame()
+})()
