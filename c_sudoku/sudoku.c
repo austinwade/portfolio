@@ -271,21 +271,31 @@ int main(void)
     unsigned short difficulty = 0;
 
     // unsigned short board[9][9];
-    unsigned short board[9][9];
-    initBoard(board);
+    unsigned short board[9][9] = {
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {4, 5, 6, 7, 8, 9, 1, 2, 3,},
+        {7, 8, 9, 1, 2, 3, 4, 5, 6,},
+        {2, 1, 4, 3, 6, 5, 8, 9, 7,},
+        {3, 6, 5, 8, 9, 7, 2, 1, 4,},
+        {8, 9, 7, 2, 1, 4, 3, 6, 5,},
+        {5, 3, 1, 6, 4, 2, 9, 7, 8,},
+        {6, 4, 2, 9, 7, 8, 5, 3, 1,},
+        {9, 7, 8, 5, 3, 1, 6, 4, 2,},
+    };
+    // initBoard(board);
     unsigned short board_solution[9][9];
 
     // genRandBoard(board);
     // printBoard(board);
 
     // random transpositions
-    // randTransposeColsAndRows(board);
+    randTransposeColsAndRows(board);
+
+    clearCells(board, 1);
+    printBoard(board);
 
     solve(board, &difficulty);
     printBoard(board);
-
-    // clearCells(board, 1);
-    // printBoard(board);
 
     // printf("Dancing Links solution steps (difficulty): %d\n\n", difficulty);
 }
