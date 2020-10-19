@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
     ";
     int dataLength = sizeof(data) - 1;
 
-    printByteArray(data, dataLength, 1, "TEXT");
+    /* print original text */
+    printByteArray(data, dataLength, 1, "SOURCE TEXT");
 
     /* run encryption routine and print results */
     unsigned char *result = Crypt(data, dataLength, 0x12345678);
