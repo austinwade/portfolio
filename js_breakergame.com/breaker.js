@@ -112,16 +112,15 @@ let field = {
         field.snacks = [];
         field.obstacles = [];
         if (this.canvas == null) {
-            this.canvas = document.getElementById("canvas");
+            this.canvas = document.querySelector("canvas");
             this.ctx = this.canvas.getContext("2d");
         }
-        // this.canvas.width = window.innerHeight*3/4;
-        // this.canvas.height = window.innerHeight;
-        this.canvas.width = 600;
-        this.canvas.height = 700;
+        this.canvas.width = window.innerHeight*3/4;
+        this.canvas.height = window.innerHeight;
+        // this.canvas.width = 300;
         this.space = this.delta/10
         this.newBallsRadius = (this.delta/2-this.space)/3,
-        this.fix_dpi()
+        // this.fix_dpi()
 
         field.clearScreen()
         this.constraint = (field.canvas.width%field.delta)/2
@@ -240,7 +239,7 @@ let field = {
         for (let i=0;i<this.blocks.length;i++) {
             if (this.blocks[i][1] >= this.finishLinePosition) {
                 this.advanceBlocks()
-                justDrawing()
+                mainDraw()
                 field.lose()
                 return
             }
@@ -304,7 +303,7 @@ let first = 0
 let readyNewLevel = false
 
 
-function justDrawing() {
+function mainDraw() {
     field.clearScreen();
     field.drawBlocks()
     myBalls.draw()
@@ -330,15 +329,16 @@ function updateGameArea() {
     field.checkCollisions(myBalls.balls)
     myBalls.advanceBalls()
 
-    justDrawing()
+    mainDraw()
 
     if (myBalls.balls.length<=0 ) {
-        if (first != 0) field.advanceBlocks()
+        if (first != 0)
+            field.advanceBlocks()
         field.checkBlocksBelow()
 
         readyNewLevel = true
 
-        justDrawing()
+        mainDraw()
         field.pause()
     }
     first++
@@ -346,7 +346,7 @@ function updateGameArea() {
 
 document.onmousemove = function(e) {
     if (field.interval == null) {
-        justDrawing()
+        mainDraw()
         field.ctx.strokeStyle = "white";
         field.ctx.setLineDash([5,10])
 
@@ -355,10 +355,10 @@ document.onmousemove = function(e) {
         field.ctx.lineTo(e.clientX-(window.innerWidth-field.canvas.width)/2,e.clientY);
         field.ctx.stroke();
 
-        field.ctx.beginPath();
-        field.ctx.moveTo(field.canvas.width/2, field.canvas.height);
-        field.ctx.lineTo(e.clientX-(window.innerWidth-field.canvas.width)/2,e.clientY);
-        field.ctx.stroke();
+        // field.ctx.beginPath();
+        // field.ctx.moveTo(field.canvas.width/2, field.canvas.height);
+        // field.ctx.lineTo(e.clientX-(window.innerWidth-field.canvas.width)/2,e.clientY);
+        // field.ctx.stroke();
     }
 }
 
