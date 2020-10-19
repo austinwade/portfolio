@@ -270,18 +270,19 @@ int main(void)
 
     unsigned short difficulty = 0;
 
+    // unsigned short board[9][9];
     unsigned short board[9][9];
     initBoard(board);
     unsigned short board_solution[9][9];
 
-    genRandBoard(board);
+    // genRandBoard(board);
     // printBoard(board);
 
     // random transpositions
     // randTransposeColsAndRows(board);
 
-    // solve(board, &difficulty);
-    // printBoard(board);
+    solve(board, &difficulty);
+    printBoard(board);
 
     // clearCells(board, 1);
     // printBoard(board);
