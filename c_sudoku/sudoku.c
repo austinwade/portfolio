@@ -235,7 +235,7 @@ void genRandBoard(unsigned short board[9][9])
                 bool legal = false;
                 if (is_legal(board, i, j, val)) {
                     board[i][j] = val;
-                    printf("board[%d, %d] = %d\n", i, j, val);
+                    // printf("board[%d, %d] = %d\n", i, j, val);
                     // break;
                 }
             // }
@@ -245,7 +245,7 @@ void genRandBoard(unsigned short board[9][9])
     printBoard(board);
     // if (!solve(board, NULL))
         // genRandBoard(board);
-    printf("not good\n");
+    // printf("not good\n");
 }
 
 void initBoard(unsigned short board[9][9]) {
