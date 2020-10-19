@@ -12,7 +12,7 @@
 #define BYTESPERPOINTER 4
 #define BYTESPERENTRY 20
 
-unsigned char *Crypt(unsigned char *data, int dataLength, unsigned int initialValue)
+unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int initialValue)
 {
     if (!data || !dataLength || !initialValue) {
         printf("Crypt error - bad arguments\n");
@@ -46,23 +46,16 @@ int printByteArray(unsigned char *data, int dataLength, int characters, char des
         return -1;
     }
 
-    printf("\n********%s********\n", desc);
+    printf("\n%s: ", desc);
 
     if (characters)
-    {
         for (int i = 0; i < dataLength; i++)
-        {
             printf("%c", data[i] & 0xff);
-        }
-    }
     else
-    {
         for (int i = 0; i < dataLength; i++)
-        {
             printf("\\x%02X", data[i] & 0xff);
-        }
-    }
-    printf("\n\n");
+    
+    printf("\n");
     return 1;
 }
 
