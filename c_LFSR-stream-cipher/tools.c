@@ -15,8 +15,8 @@
 unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int initialValue)
 {
     if (!data || !dataLength || !initialValue) {
-        printf("Crypt error - bad arguments\n");
-        return "";
+        printf("LFSR error - bad arguments\n");
+        return sprintf(malloc(7), "failed");
     }
     unsigned int S = initialValue;
     unsigned int F = 0x87654321;

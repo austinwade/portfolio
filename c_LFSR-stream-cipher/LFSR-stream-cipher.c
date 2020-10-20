@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     /* initialize string as data source */
-    unsigned char data[] = "Put your variable-length s3cr3ts here.";
+    unsigned char data[] = "Your variable-length s3cr3ts go here.";
     int dataLength = sizeof(data) - 1;
 
     /* print original text */
