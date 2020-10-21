@@ -16,7 +16,7 @@ unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int iv)
 {
     if (!data || !dataLength || !iv) {
         printf("LFSR error - bad arguments\n");
-        return sprintf(malloc(7), "failed");
+        return "";
     }
     unsigned int S = iv;
     unsigned int F = 0x87654321;
