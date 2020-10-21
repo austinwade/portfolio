@@ -2,7 +2,7 @@
 #define BYTESPERPOINTER 4
 #define BYTESPERENTRY 20
 
-unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int initialValue);
+unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int iv);
 
 int printByteArray(unsigned char *data, int len, int characters, char desc[]);
 

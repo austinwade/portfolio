@@ -12,13 +12,13 @@
 #define BYTESPERPOINTER 4
 #define BYTESPERENTRY 20
 
-unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int initialValue)
+unsigned char *LFSR(unsigned char *data, int dataLength, unsigned int iv)
 {
-    if (!data || !dataLength || !initialValue) {
+    if (!data || !dataLength || !iv) {
         printf("LFSR error - bad arguments\n");
         return sprintf(malloc(7), "failed");
     }
-    unsigned int S = initialValue;
+    unsigned int S = iv;
     unsigned int F = 0x87654321;
     unsigned char *res = malloc(sizeof(char) * dataLength);
 
