@@ -13,13 +13,7 @@ int main(void)
 
     initBoard(board);
     solve(board, &difficulty);
-
-    // unsigned short board_solution[9][9];
-
     // genRandBoard(board);
-    // printBoard(board);
-
-    // random transpositions
     randTransposeColsAndRows(board);
 
     clearCells(board, 1);
@@ -28,5 +22,5 @@ int main(void)
     solve(board, &difficulty);
     printBoard(board);
 
-    // printf("Dancing Links solution steps (difficulty): %d\n\n", difficulty);
+    printf("Difficulty: %d\n\n", difficulty);
 }
