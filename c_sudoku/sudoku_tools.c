@@ -5,6 +5,7 @@
 
 bool valIn(unsigned short arr[], unsigned short val)
 {
+    /* checks if ushort is in ushort[] */
     for (unsigned short j = 0; j < 9; j++)
         if (arr[j] == val)
             return true;
@@ -13,17 +14,17 @@ bool valIn(unsigned short arr[], unsigned short val)
 
 bool is_legal(unsigned short board[9][9], unsigned short row, unsigned short col, unsigned short val)
 {
-    // row
+    /* check for val in row */
     if (valIn(board[row], val))
         return false;
-    // col
+    /* check for val in col */
     unsigned short column[9];
     for (unsigned short i = 0; i < 9; i++)
         column[i] = board[i][col];
     if (valIn(column, val))
         return false;
 
-    // sub-box of 9
+    /* check for val in sub-box of 9 */
     unsigned short row_sub = (row / 3) * 3;
     unsigned short col_sub = (col / 3) * 3;
     for (unsigned short i = row_sub; i < row_sub + 3; i++)
@@ -35,6 +36,7 @@ bool is_legal(unsigned short board[9][9], unsigned short row, unsigned short col
 
 bool hasUnassigned(unsigned short board[9][9], unsigned short *row, unsigned short *col)
 {
+    /* returns value of first unassigned (0) cell */
     for (unsigned short i = 0; i < 9; i++)
         for (unsigned short j = 0; j < 9; j++)
             if (board[i][j] == 0)
@@ -48,6 +50,7 @@ bool hasUnassigned(unsigned short board[9][9], unsigned short *row, unsigned sho
 
 bool check9(unsigned short arr[])
 {
+    /* checks is array contains 1-9 */
     for (unsigned short i = 0; i < 9; i++)
     {
         bool found = false;
@@ -69,6 +72,7 @@ bool check9(unsigned short arr[])
 
 void printBoard(unsigned short board[9][9])
 {
+    /* prints game board */
     printf("\n");
     for (unsigned short row = 0; row < 9; row++)
     {
@@ -91,12 +95,12 @@ void printBoard(unsigned short board[9][9])
 
 bool isSolved(unsigned short board[9][9])
 {
-    // check rows
+    /* checks if row is complete */
     for (unsigned short i = 0; i < 9; i++)
         if (check9(board[i]) == false)
             return false;
 
-    // columns
+    /* checks if col is complete */
     for (unsigned short i = 0; i < 9; i++)
     {
         unsigned short column[9];
@@ -106,9 +110,8 @@ bool isSolved(unsigned short board[9][9])
             return false;
     }
 
-    // 9 sub-boxes
+    /* checks if 9-sub-box is complete */
     for (unsigned short i = 0; i < 3; i++)
-    {
         for (unsigned short j = 0; j < 3; j++)
         {
             unsigned short box[9];
@@ -118,13 +121,13 @@ bool isSolved(unsigned short board[9][9])
             if (check9(box) == false)
                 return false;
         }
-    }
 
     return true;
 }
 
 void clearCells(unsigned short board[9][9], unsigned short prob)
 {
+    /* "clears" random cells by setting them equal to 0 */
     for (unsigned short i = 0; i < 9; i++)
         for (unsigned short j = 0; j < rand() % 20; j++)
             board[i][rand() % 10] = 0;
@@ -132,6 +135,7 @@ void clearCells(unsigned short board[9][9], unsigned short prob)
 
 void transposeColumn(unsigned short board[9][9], unsigned short col1, unsigned short col2)
 {
+    /* rearrrange columns within each super-column of 3 */
     unsigned short col_temp[9];
     for (unsigned short row = 0; row < 9; row++)
         col_temp[row] = board[row][col1];
@@ -143,6 +147,7 @@ void transposeColumn(unsigned short board[9][9], unsigned short col1, unsigned s
 
 void transposeRow(unsigned short board[9][9], unsigned short row1, unsigned short row2)
 {
+    /* rearrrange rows within each super-column of 3 */
     unsigned short row_temp[9];
     for (unsigned short col = 0; col < 9; col++)
         row_temp[col] = board[row1][col];
@@ -154,6 +159,7 @@ void transposeRow(unsigned short board[9][9], unsigned short row1, unsigned shor
 
 bool solve(unsigned short board[9][9], unsigned short *difficulty)
 {
+    /* solve sudoku puzzle by recursively trying and checking each cell */
     *difficulty += 1;
     if (isSolved(board) == true)
         return true;
@@ -171,9 +177,10 @@ bool solve(unsigned short board[9][9], unsigned short *difficulty)
     return false;
 }
 
-void randTransposeColumns(unsigned short board[9][9], unsigned short freq)
+void randTransposeColumns(unsigned short board[9][9], unsigned short n)
 {
-    for (unsigned short i = 0; i < rand() % freq; i++)
+    /* random col transposition n times */
+    for (unsigned short i = 0; i < rand() % n; i++)
     {
         unsigned short randFrom, randTo;
         do
@@ -186,9 +193,10 @@ void randTransposeColumns(unsigned short board[9][9], unsigned short freq)
     }
 }
 
-void randTransposeRows(unsigned short board[9][9], unsigned short freq)
+void randTransposeRows(unsigned short board[9][9], unsigned short n)
 {
-    for (unsigned short i = 0; i < rand() % freq; i++)
+    /* random row transposition n times */
+    for (unsigned short i = 0; i < rand() % n; i++)
     {
         unsigned short randFrom, randTo;
         do
@@ -196,47 +204,38 @@ void randTransposeRows(unsigned short board[9][9], unsigned short freq)
             randFrom = ((((rand() % 8)) / 3) * 3) + rand() % 3;
             randTo = (randFrom / 3) * 3 + rand() % 3;
         } while (randFrom == randTo);
-        // printf("randFrom - %d, randTo - %d\n", randFrom, randTo);
         transposeRow(board, randFrom, randTo);
     }
 }
 
 void randTransposeColsAndRows(unsigned short board[9][9])
 {
-    int freq = 9999;
-    for (int i = 0; i < freq; i++)
+    /* random col/row transposition n^2 times */
+    int n = 9999;
+    for (int i = 0; i < n; i++)
     {
-        randTransposeColumns(board, freq);
-        randTransposeRows(board, freq);
+        randTransposeColumns(board, n);
+        randTransposeRows(board, n);
     }
 }
 
 void genRandBoard(unsigned short board[9][9])
 {
+    /* unfinished */
     for (int i = 0; i < 9; i++)
-    {
         for (int j = 0; j < 9; j++)
         {
-            // for (int k=0; k<3; k++) {
             unsigned short val = rand() % 10;
             bool legal = false;
             if (is_legal(board, i, j, val))
-            {
                 board[i][j] = val;
-                // printf("board[%d, %d] = %d\n", i, j, val);
-                // break;
-            }
-            // }
         }
-    }
     printBoard(board);
-    // if (!solve(board, NULL))
-    // genRandBoard(board);
-    // printf("not good\n");
 }
 
 void initBoard(unsigned short board[9][9])
 {
+    /* set all cells to 0 */
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = 0;
@@ -244,6 +243,7 @@ void initBoard(unsigned short board[9][9])
 
 void copyBoard(unsigned short board1[9][9], unsigned short board2[9][9])
 {
+    /* copy board cell for cell */
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board2[i][j] = board1[i][j];
