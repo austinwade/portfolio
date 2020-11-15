@@ -16,8 +16,11 @@ class Balls {
         this.refreshRate = refreshRate;
         this.speedSet.map((val) => val / 2);
     }
+
     advanceBalls() {
         let wallDampening = 0.99;
+
+        /* for each liveBall */
         for (let i = 0; i < this.liveBalls.length; i++) {
             // check for final ball ?
             if (this.numBalls == this.liveBalls.length - 1) {
@@ -44,11 +47,14 @@ class Balls {
             // update motion
             this.liveBalls[i][0] += this.liveBalls[i][2];
             this.liveBalls[i][1] += this.liveBalls[i][3];
+
             // gravity
             this.liveBalls[i][3] += this.speedSet[1] / 5000;
         }
     }
+
     addLiveBall() {
+        /* add liveBall to array with default values */
         this.liveBalls.push([
             this.dims[0] / 2,
             this.dims[1] - this.radius,
@@ -82,10 +88,6 @@ class Model {
             this,
             this.refreshRate
         );
-        this.finishLineHeight =
-            this.dims[0] -
-            (this.dims[1] % this.blockWidth) -
-            2 * this.blockWidth;
         this.newBallsRadius = (this.blockWidth / 2 - this.space) / 3;
         this.constraint = (this.width % this.blockWidth) / 2;
         if (this.constraint < this.blockWidth)
@@ -97,18 +99,21 @@ class Model {
     }
 
     genRow() {
+        /* for each of the spots available in one horizontal row */
         for (
             let i = 0;
             i <
             Math.floor((this.width - this.constraint) / this.blockWidth) - 1;
             i++
         ) {
+            /* add new block w/ 1/2 probability */
             if (Math.random() > 0.5) {
                 this.blocks.push([
                     i * this.blockWidth + this.constraint,
                     -this.blockWidth,
                     Math.ceil((this.level + 1) * 2 * Math.random()),
                 ]);
+            /* add new newBall w/ 1/4 probability */
             } else if (Math.random() > 0.75)
                 this.balls.newBalls.push([
                     i * this.blockWidth + this.constraint + this.blockWidth / 2,
@@ -116,10 +121,12 @@ class Model {
                 ]);
         }
     }
+
     advanceBlocks() {
         /* generate new row */
         this.genRow();
-        /* advance all blocks by one height */
+
+        /* advance all blocks by one block height */
         for (let i = 0; i < this.blocks.length; i++) {
             this.blocks[i][1] += this.blockWidth;
         }
@@ -132,11 +139,15 @@ class Model {
         /* increment level */
         this.level++;
     }
+
     checkNewBallCollisions() {
+        /* for each liveBall */
         for (let j = 0; j < this.balls.liveBalls.length; j++) {
             let x = this.balls.liveBalls[j][0];
             let y = this.balls.liveBalls[j][1];
+            /* for each newBall */
             for (let i = 0; i < this.balls.newBalls.length; i++) {
+                /* if newBall and liveBall intersect */
                 if (
                     Math.sqrt(
                         Math.pow(this.balls.newBalls[i][0] - x, 2) +
@@ -144,17 +155,25 @@ class Model {
                     ) <=
                     this.balls.radius + this.balls.newBallsRadius
                 ) {
+                    /* increment numBalls */
                     this.balls.numBalls++;
+
+                    /* update ball counter */
                     document.getElementsByClassName(
                         "ballnum"
                     )[0].innerHTML = this.balls.numBalls + 1;
+
+                    /* remove newBall from array */
                     this.balls.newBalls.splice(i, 1);
+
+                    /* start over because we messed up indexing by removing a newBall */
                     this.checkNewBallCollisions();
                     return;
                 }
             }
         }
     }
+
     checkBlockCollisions() {
         let hitZone =
             this.blockWidth / 2 + 3 * this.balls.radius / (4 * this.refreshRate);
@@ -226,9 +245,13 @@ class Model {
             }
         }
     }
+
     checkBlocksBelowFinishLine() {
+        /* iterate over each block */
         for (let i = 0; i < this.blocks.length; i++) {
+            /* if block top below finishLine */
             if (this.blocks[i][1] >= this.finishLineHeight) {
+                /* stop game */
                 this.lose();
                 return;
             }
@@ -236,7 +259,7 @@ class Model {
     }
 
     /**
-     *
+     * updateGameState - primary game logic update routine
      */
     updateGameState() {
         /* set current time */
@@ -283,6 +306,7 @@ class Model {
     lose() {
         /* stop interval after losing */
         clearInterval(this.interval);
+        this.interval = null;
 
         /* alert the player */
         alert("Excellent work! Highest score: " + this.score);
@@ -292,13 +316,19 @@ class Model {
     }
 
     startClock(view, x = 1) {
+        /* clear last interval */
         clearInterval(this.interval);
+
+        /* set start time of this interval */
         this.startTime = new Date().getTime();
-        // this.speedUpMultiplier
+
+        /* set browser to watch game state */
         this.interval = setInterval(() => {
             let wait = 3000;
+
+            /* restart clock faster for SuperSpeed */
             if (this.startTime < new Date().getTime() - wait && this.ballsInQueue <= 0) {
-                // this doesn'tw ork right now because startTime is being set every time above
+                // this doesn't work right now because startTime is being set every time above
                 if (this.startTime < new Date().getTime() - 2*wait) {
                     this.startClock(view, 8);
                     return;
@@ -307,21 +337,27 @@ class Model {
                 return;
             }
 
+            /* update game x times between drawing */
             for (let i = 0; i < x; i++) {
                 this.updateGameState();
             }
 
+            /* logic for when no more liveBalls are left */
             if (this.balls.liveBalls.length <= 0) {
                 this.advanceBlocks();
                 this.checkBlocksBelowFinishLine();
                 this.readyNewLevel = true;
                 this.pause();
             }
+
+            /* draw game */
             view.draw();
         }, this.refreshRate);
     }
+
     pause() {
-        if (this.interval) {
+        if (this.interval != null) {
+            /* reset this interval */
             clearInterval(this.interval);
             this.interval = null;
         }
