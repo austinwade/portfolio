@@ -3,6 +3,8 @@
 
 int main(int argc, char *argv[])
 {
+    char text_buffer[100];
+
     /* initialize string as data source */
     unsigned char data[] = "Your variable-length s3cr3ts go here.";
     int dataLength = sizeof(data) - 1;
@@ -12,11 +14,13 @@ int main(int argc, char *argv[])
 
     /* run encryption routine and print results */
     unsigned char *result = LFSR(data, dataLength, 0x12345678);
-    printByteArray(result, dataLength, 0, "CIPHERTEXT");
+    sprintf(text_buffer, "CIPHERTEXT");
+    printByteArray(result, dataLength, 0, text_buffer);
 
-    /* run encryption routine and print results */
+    /* run decryption routine and print results */
     result = LFSR(result, dataLength, 0x12345678);
-    printByteArray(result, dataLength, 1, "DECRYPTED CIPHERTEXT");
+    sprintf(text_buffer, "DECRYPTED CIPHERTEXT");
+    printByteArray(result, dataLength, 1, text_buffer);
     
     printf("\n");
 }
