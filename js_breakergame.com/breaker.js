@@ -49,7 +49,7 @@ class Balls {
             this.liveBalls[i][1] += this.liveBalls[i][3];
 
             // gravity
-            this.liveBalls[i][3] += this.speedSet[1] / 5000;
+            this.liveBalls[i][3] += Math.abs(this.speedSet[1] / 2500);
         }
     }
 
@@ -68,7 +68,6 @@ class Balls {
 class Model {
     blocks = [];
     level = 0;
-    newBalls = [];
     snacks = [];
     obstacles = [];
     readyNewLevel = false;
@@ -508,6 +507,7 @@ class View {
         this.ctx.moveTo(this.canvas.width / 2, this.canvas.height);
         this.ctx.lineTo(point2_x, point2_y);
         this.ctx.stroke();
+        console.log("view: ", this.model.secretValue)
     }
 }
 
