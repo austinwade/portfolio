@@ -26,7 +26,7 @@ class Controller {
 
             /* set initial velocity vector for balls on click */
             let x = e.clientX - window.innerWidth / 2;
-            let y = view.height - e.clientY;
+            let y = this.view.height - e.clientY;
             let r = Math.sqrt(x * x + y * y);
             x /= r;
             y /= r;
@@ -38,7 +38,7 @@ class Controller {
 
             /* start game */
             this.model.readyNewLevel = true;
-            this.model.startClock(view);
+            this.model.startClock(this.view);
         };
     }
 }
