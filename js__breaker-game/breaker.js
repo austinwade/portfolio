@@ -8,7 +8,7 @@ class Controller {
         this.dims = [(window.innerHeight * 3) / 4, window.innerHeight];
         this.interval = null;
         this.model = new Model(this.dims);
-        this.view = new View(model, this.dims);
+        this.view = new View(this.model, this.dims);
 
         /* mouse handler */
         document.onmousemove = (e) => {
