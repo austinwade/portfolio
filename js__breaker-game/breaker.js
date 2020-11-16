@@ -328,10 +328,10 @@ class Model {
             /* restart clock faster for SuperSpeed */
             if (this.startTime < new Date().getTime() - wait && this.ballsInQueue <= 0) {
                 // this doesn't work right now because startTime is being set every time above
-                if (this.startTime < new Date().getTime() - 2*wait) {
-                    this.startClock(view, 8);
-                    return;
-                }
+                // if (this.startTime < new Date().getTime() - 2*wait) {
+                //     this.startClock(view, 3);
+                //     return;
+                // }
                 this.startClock(view, 2);
                 return;
             }
