@@ -64,8 +64,10 @@ export default class Model {
             let freq = fourier[i].freq;
             let phase = fourier[i].phase;
 
-            x += amp * Math.cos(this.time * freq + phase + rotation);
-            y += amp * Math.sin(this.time * freq + phase + rotation);
+            let angle = this.time * freq + phase + rotation;
+
+            x += amp * Math.cos(angle);
+            y += amp * Math.sin(angle);
 
             epicycle_points.push([x, y]);
         }
@@ -73,6 +75,10 @@ export default class Model {
         return epicycle_points;
     }
 
+    /**
+     * elongate() - Quadruple number of points by averaging between
+     * 
+     */
     elongate() {
         const elongated = [];
         for (let i = 0; i < this.drawing.length - 1; i += 1) {

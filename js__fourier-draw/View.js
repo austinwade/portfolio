@@ -35,19 +35,18 @@ export default class View {
 
     drawMouseMove() {
         this.clearScreen();
-        this.ctx.strokeStyle = "#FFF";
         this.drawPath(this.model.drawing);
     }
 
     drawEpicycles(points) {
         this.ctx.lineWidth = 0.5;
+        this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
+        this.ctx.beginPath();
         for (let i = 0; i < points.length - 1; i++) {
-            this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
-            this.ctx.beginPath();
             this.ctx.moveTo(points[i][0], points[i][1]);
             this.ctx.lineTo(points[i + 1][0], points[i + 1][1]);
-            this.ctx.stroke();
         }
+        this.ctx.stroke();
     }
 
     drawFourier() {
@@ -83,7 +82,7 @@ export default class View {
         this.ctx.fillStyle = "#FFF";
         this.ctx.font = "30px Arial";
         this.ctx.fillText(
-            "Slowly draw a big shape",
+            "Draw a big shape",
             window.innerWidth / 2 - 160,
             window.innerHeight / 2 - 100
         );
@@ -98,14 +97,14 @@ export default class View {
     }
 
     drawPath(path) {
+        this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
+        this.ctx.lineWidth = 0.5;
+        this.ctx.beginPath();
         for (let i = 0; i < path.length - 1; i++) {
-            this.ctx.lineWidth = 0.5;
-            this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
-            this.ctx.beginPath();
             this.ctx.moveTo(path[i][0], path[i][1]);
             this.ctx.lineTo(path[i + 1][0], path[i + 1][1]);
-            this.ctx.stroke();
         }
+        this.ctx.stroke();
     }
 
     drawPath_blue(path) {
