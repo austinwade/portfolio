@@ -15,20 +15,70 @@ class Controller {
 
         this.setListeners();
 
-        this.view.runDrawing();
+        this.runDrawing();
+    }
+
+    drawFourier() {
+        /* clear screen */
+        this.view.clearScreen(this.view.blackVal);
+
+        /* draw original path */
+        this.view.drawPath(this.model.drawing);
+
+        /* draw new partial fourier path */
+        this.view.drawPartialPath(this.model.pathBeingDrawn);
+
+        let epicycles = this.model.epicycles(
+            this.model.center[0],
+            this.model.center[1],
+            0,
+            this.model.fourier
+        );
+
+        this.view.drawEpicycles(epicycles);
+
+        epicycles = epicycles[epicycles.length - 1];
+
+        this.model.pathBeingDrawn.push(epicycles);
+
+        this.model.time += (2 * Math.PI) / this.model.fourier.length;
+
+        if (!this.view.hasBegunDrawing) this.view.displayInstructions();
+
+        if (this.model.time > 2 * Math.PI) {
+            this.model.time = 0;
+            this.model.pathBeingDrawn = [];
+            this.model.runDFT();
+        }
+    }
+
+    runDrawing() {
+        this.view.mouseIsMoving = false;
+        this.model.runDFT();
+        this.view.interval = setInterval(() => {
+            this.drawFourier();
+        }, this.view.refreshRate);
+    }
+
+    reset() {
+        this.view.clearScreen();
+        this.model.drawing = [];
+        this.model.complex_points = [];
+        this.model.time = 0;
+        this.model.pathBeingDrawn = [];
     }
 
     setListeners() {
         /* window resize handler */
         window.onresize = () => {
-            this.view.reset;
+            this.reset;
         };
 
         /* mousedown handler */
         this.view.canvas.addEventListener("mousedown", (e) => {
             this.view.mouseIsMoving = true;
             this.view.hasBegunDrawing = true;
-            this.view.reset();
+            this.reset();
             this.model.clear();
             this.view.clearInterval();
         });
@@ -43,7 +93,7 @@ class Controller {
         /* mouseup handler */
         this.view.canvas.addEventListener("mouseup", () => {
             this.model.elongate(this.drawing);
-            this.view.runDrawing();
+            this.runDrawing();
         });
 
         /*

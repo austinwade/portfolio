@@ -5,8 +5,7 @@ import { defaultDrawing } from "./defaultDrawing.js";
 
 export default class Model {
     time = 0;
-    path = [];
-    blackVal = 1;
+    pathBeingDrawn = [];
     drawing = defaultDrawing;
 
     constructor(center) {
@@ -15,13 +14,13 @@ export default class Model {
 
     clear() {
         this.drawing = [];
-        this.path = [];
+        this.pathBeingDrawn = [];
     }
 
     dft(points) {
         const dft_points = [];
 
-        /* for each complex point i */
+        /* for each original point i */
         for (let i = 0; i < points.length; i++) {
             let complex_sum = new Complex(0, 0);
 

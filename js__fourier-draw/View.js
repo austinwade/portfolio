@@ -3,12 +3,12 @@ export default class View {
     hasBegunDrawing = false;
     refreshRate = 10;
     constructor(model) {
+        /* import model */
         this.model = model;
-        this.lsd = document.getElementById("lsd");
+
+        /* setup canvas */
         this.canvas = document.getElementById("drawHere");
         this.ctx = this.canvas.getContext("2d");
-        this.ctx.lineWidth = 0.5;
-
         this.setSizing();
     }
 
@@ -23,14 +23,6 @@ export default class View {
         this.canvas.style.width = this.canvas.width / 2 + "px";
         this.canvas.style.height = this.canvas.height / 2 + "px";
         this.ctx.scale(2, 2);
-    }
-
-    reset() {
-        this.clearScreen();
-        this.model.drawing = [];
-        this.model.complex_points = [];
-        this.model.time = 0;
-        this.model.path = [];
     }
 
     drawMouseMove() {
@@ -49,35 +41,6 @@ export default class View {
         this.ctx.stroke();
     }
 
-    drawFourier() {
-        this.clearScreen(this.blackVal);
-        // this.drawPath (this.model.drawing);
-        this.drawPath_blue(this.model.path);
-
-        let epicycles = this.model.epicycles(
-            this.model.center[0],
-            this.model.center[1],
-            0,
-            this.model.fourier
-        );
-
-        this.drawEpicycles(epicycles);
-
-        epicycles = epicycles[epicycles.length - 1];
-
-        this.model.path[this.model.path.length] = epicycles;
-
-        this.model.time += (Math.PI * 2) / this.model.fourier.length;
-
-        if (!this.hasBegunDrawing) this.displayInstructions();
-
-        if (this.model.time > Math.PI * 2) {
-            this.model.time = 0;
-            this.model.path = [];
-            this.model.runDFT();
-        }
-    }
-
     displayInstructions() {
         this.ctx.fillStyle = "#FFF";
         this.ctx.font = "30px Arial";
@@ -86,14 +49,6 @@ export default class View {
             window.innerWidth / 2 - 160,
             window.innerHeight / 2 - 100
         );
-    }
-
-    runDrawing() {
-        this.mouseIsMoving = false;
-        this.model.runDFT();
-        this.interval = setInterval(() => {
-            this.drawFourier();
-        }, this.refreshRate);
     }
 
     drawPath(path) {
@@ -107,11 +62,9 @@ export default class View {
         this.ctx.stroke();
     }
 
-    drawPath_blue(path) {
-        this.drawPath(path);
-        if (path.length <= 1) return -1;
+    drawPartialPath(path) {
+        this.ctx.lineWidth = 3;
         for (let i = 0; i < path.length - 1; i++) {
-            this.ctx.lineWidth = 1;
             let r = 0,
                 g = (255 * (path.length - i)) / path.length + 0.3,
                 b = (255 * i) / path.length,
