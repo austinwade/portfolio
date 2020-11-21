@@ -1,7 +1,4 @@
 export default class View {
-    mouseIsMoving = false;
-    hasBegunDrawing = false;
-    refreshRate = 10;
     constructor(model) {
         /* import model */
         this.model = model;
@@ -10,11 +7,6 @@ export default class View {
         this.canvas = document.getElementById("drawHere");
         this.ctx = this.canvas.getContext("2d");
         this.setSizing();
-    }
-
-    clearInterval() {
-        clearInterval(this.interval);
-        this.interval = null;
     }
 
     setSizing() {
@@ -26,7 +18,7 @@ export default class View {
     }
 
     drawMouseMove() {
-        this.clearScreen();
+        this.clear();
         this.drawPath(this.model.drawing);
     }
 
@@ -79,7 +71,7 @@ export default class View {
         }
     }
 
-    clearScreen(opacity = 1) {
+    clear(opacity = 1) {
         this.ctx.fillStyle =
             "rgba(" + 0 + "," + 0 + "," + 0 + "," + opacity + ")";
         this.ctx.fillRect(0, 0, this.canvas.width / 2, this.canvas.height / 2);

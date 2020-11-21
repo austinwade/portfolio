@@ -7,6 +7,7 @@ export default class Model {
     time = 0;
     pathBeingDrawn = [];
     drawing = defaultDrawing;
+    center = [0, 0];
 
     constructor(center) {
         this.center = center;
@@ -15,6 +16,7 @@ export default class Model {
     clear() {
         this.drawing = [];
         this.pathBeingDrawn = [];
+        this.time = 0;
     }
 
     dft(points) {
