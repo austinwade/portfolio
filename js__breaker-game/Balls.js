@@ -50,7 +50,7 @@ export default class Balls {
             this.liveBalls[i][1] += this.liveBalls[i][3];
 
             // gravity
-            this.liveBalls[i][3] += Math.abs(this.speedSet[1] / 2500);
+            this.liveBalls[i][3] += Math.abs(this.speedSet[1] / 5000);
         }
     }
 

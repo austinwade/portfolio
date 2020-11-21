@@ -13,11 +13,10 @@ export default class Model {
     refreshRate = 1;
     score = 0;
     constructor(dims) {
-        this.dims = dims;
         this.width = dims[0];
         this.height = dims[1];
         this.balls = new Balls(
-            this.dims,
+            dims,
             this.blockWidth,
             this,
             this.refreshRate
@@ -48,7 +47,7 @@ export default class Model {
                     Math.ceil((this.level + 1) * 2 * Math.random()),
                 ]);
                 /* add new newBall w/ 1/4 probability */
-            } else if (Math.random() > 0.75)
+            } else if (Math.random() > 0.85)
                 this.balls.newBalls.push([
                     i * this.blockWidth + this.constraint + this.blockWidth / 2,
                     -this.blockWidth / 2,
@@ -258,7 +257,7 @@ export default class Model {
 
         /* set browser to watch game state */
         this.interval = setInterval(() => {
-            let wait = 3000;
+            let wait = 5 * 1000;
 
             /* restart clock faster for SuperSpeed */
             if (
