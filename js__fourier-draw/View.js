@@ -1,55 +1,20 @@
 export default class View {
-    lsd = document.getElementById("lsd");
-    isDrawing = false;
+    mouseIsMoving = false;
     hasBegunDrawing = false;
+    refreshRate = 10;
     constructor(model) {
         this.model = model;
-
+        this.lsd = document.getElementById("lsd");
         this.canvas = document.getElementById("drawHere");
         this.ctx = this.canvas.getContext("2d");
         this.ctx.lineWidth = 0.5;
 
         this.setSizing();
-        this.setListeners();
     }
 
-    setListeners() {
-        window.onresize = this.reset;
-
-        this.canvas.addEventListener("mousedown", (e) => {
-            this.isDrawing = true;
-            this.hasBegunDrawing = true;
-            this.reset();
-        });
-        this.canvas.addEventListener("mousemove", (e) => {
-            if (!this.isDrawing) return;
-            this.ctx.fillRect(e.clientX, e.clientY, 2, 2);
-            this.model.drawing.push([e.clientX, e.clientY]);
-            this.drawMouseMove();
-        });
-        this.canvas.addEventListener("mouseup", () => {
-            this.model.elongate();
-            this.runDrawing();
-        });
-        document.body.onkeyup = (e) => {
-            if (e.keyCode != 32) return;
-            if (interval != null) {
-                clearInterval(interval);
-                interval = null;
-            } else interval = setInterval(draw, timeInterval);
-        };
-
-        this.lsd.onclick = () => {
-            console.log("lsd");
-            let lsd_classlist = this.lsd.classList;
-            if (lsd_classlist.contains("active")) {
-                lsd_classlist.remove("active");
-                this.blackVal = 1;
-            } else {
-                lsd_classlist.add("active");
-                this.blackVal = 0.25;
-            }
-        };
+    clearInterval() {
+        clearInterval(this.interval);
+        this.interval = null;
     }
 
     setSizing() {
@@ -61,8 +26,7 @@ export default class View {
     }
 
     reset() {
-        this.black();
-        this.model.state = this.model.STATE_USER;
+        this.clearScreen();
         this.model.drawing = [];
         this.model.complex_points = [];
         this.model.time = 0;
@@ -70,9 +34,7 @@ export default class View {
     }
 
     drawMouseMove() {
-        if (this.model.state != this.model.STATE_USER) return;
-
-        this.black();
+        this.clearScreen();
         this.ctx.strokeStyle = "#FFF";
         this.drawPath(this.model.drawing);
     }
@@ -80,7 +42,7 @@ export default class View {
     drawEpicycles(points) {
         this.ctx.lineWidth = 0.5;
         for (let i = 0; i < points.length - 1; i++) {
-            this.ctx.strokeStyle = "rgba(255,255,255," + 0.5 + ")";
+            this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
             this.ctx.beginPath();
             this.ctx.moveTo(points[i][0], points[i][1]);
             this.ctx.lineTo(points[i + 1][0], points[i + 1][1]);
@@ -89,16 +51,13 @@ export default class View {
     }
 
     drawFourier() {
-        if (this.model.state != this.model.STATE_FOURIER) return;
-
-        this.black(this.blackVal);
-        this.ctx.strokeStyle = "#FFF";
-        this.drawPath(this.model.drawing);
+        this.clearScreen(this.blackVal);
+        // this.drawPath (this.model.drawing);
         this.drawPath_blue(this.model.path);
 
         let epicycles = this.model.epicycles(
-            this.canvas.width / 4,
-            this.canvas.height / 4,
+            this.model.center[0],
+            this.model.center[1],
             0,
             this.model.fourier
         );
@@ -116,7 +75,7 @@ export default class View {
         if (this.model.time > Math.PI * 2) {
             this.model.time = 0;
             this.model.path = [];
-            this.model.runFourier();
+            this.model.runDFT();
         }
     }
 
@@ -131,18 +90,15 @@ export default class View {
     }
 
     runDrawing() {
-        this.isDrawing = false;
-        this.model.state = 1; // fourier
-        this.model.runFourier();
-        this.model.interval = setInterval(() => {
+        this.mouseIsMoving = false;
+        this.model.runDFT();
+        this.interval = setInterval(() => {
             this.drawFourier();
-        }, this.model.timeInterval);
+        }, this.refreshRate);
     }
 
     drawPath(path) {
-        if (path.length <= 1) return -1;
         for (let i = 0; i < path.length - 1; i++) {
-            // ctx.strokeStyle = "rgba(255,255,255," + i/path.length + ")"
             this.ctx.lineWidth = 0.5;
             this.ctx.strokeStyle = "rgba(255,255,255," + 1 + ")";
             this.ctx.beginPath();
@@ -171,7 +127,7 @@ export default class View {
         }
     }
 
-    black(opacity = 1) {
+    clearScreen(opacity = 1) {
         this.ctx.fillStyle =
             "rgba(" + 0 + "," + 0 + "," + 0 + "," + opacity + ")";
         this.ctx.fillRect(0, 0, this.canvas.width / 2, this.canvas.height / 2);

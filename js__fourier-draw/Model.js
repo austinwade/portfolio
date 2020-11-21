@@ -1,34 +1,32 @@
+"use strict";
+
 import Complex from "./Complex.js";
 import { defaultDrawing } from "./defaultDrawing.js";
 
 export default class Model {
-    STATE_USER = 0;
-    STATE_FOURIER = 1;
-    two_pi = Math.PI * 2;
-    complex_points = [];
     time = 0;
     path = [];
-    drawing = [];
-    state = this.STATE_USER;
     blackVal = 1;
-    interval;
-    skip = 0;
-    timeInterval = 10;
     drawing = defaultDrawing;
 
-    dft(points) {
-        // for (let i = 1 + this.skip; i <= points.length; i += 1 + this.skip) {
-        //     points.splice(i, 1);
-        // }
+    constructor(center) {
+        this.center = center;
+    }
 
-        const points_transformed = [];
+    clear() {
+        this.drawing = [];
+        this.path = [];
+    }
+
+    dft(points) {
+        const dft_points = [];
 
         /* for each complex point i */
         for (let i = 0; i < points.length; i++) {
             let complex_sum = new Complex(0, 0);
 
             /* create unique complex_sum for point i */
-            for (let j = 0; j < points.length; n++) {
+            for (let j = 0; j < points.length; j++) {
                 const phi = (i * j * Math.PI * 2) / points.length;
                 const c = new Complex(Math.cos(phi), -Math.sin(phi));
                 complex_sum.add(points[j].mult(c));
@@ -43,29 +41,40 @@ export default class Model {
 
             /* calculate angle between x-axis and (x, y) -> atan2(y, x) */
             let phase = Math.atan2(complex_sum.im, complex_sum.re);
-            points_transformed[i] = { re: complex_sum.re, im: complex_sum.im, freq: i, amp, phase };
+
+            dft_points.push({
+                re: complex_sum.re,
+                im: complex_sum.im,
+                freq: i,
+                amp: amp,
+                phase: phase,
+            });
         }
-        return points_transformed;
+
+        return dft_points;
     }
 
     epicycles(x, y, rotation, fourier) {
-        let epicyclePoints = [[x, y]];
-        for (let i = 0; i < fourier.length; i++) {
-            let prevX = x;
-            let prevY = y;
-            let freq = fourier[i].freq;
-            let radius = fourier[i].amp;
-            let phase = fourier[i].phase;
-            x += radius * Math.cos(freq * this.time + phase + rotation);
-            y += radius * Math.sin(freq * this.time + phase + rotation);
+        /* init epicycle points */
+        const epicycle_points = [[x, y]];
 
-            epicyclePoints.push([x, y]);
+        /* for each fourier point */
+        for (let i = 0; i < fourier.length; i++) {
+            let amp = fourier[i].amp;
+            let freq = fourier[i].freq;
+            let phase = fourier[i].phase;
+
+            x += amp * Math.cos(this.time * freq + phase + rotation);
+            y += amp * Math.sin(this.time * freq + phase + rotation);
+
+            epicycle_points.push([x, y]);
         }
-        return epicyclePoints;
+
+        return epicycle_points;
     }
 
     elongate() {
-        let elongated = [];
+        const elongated = [];
         for (let i = 0; i < this.drawing.length - 1; i += 1) {
             elongated.push(this.drawing[i]);
             elongated.push([
@@ -90,17 +99,17 @@ export default class Model {
         this.drawing = elongated;
     }
 
-    runFourier() {
-        this.complex_points = [];
+    runDFT() {
+        const complex_points = [];
         for (let i = 0; i < this.drawing.length; i++)
-        /* record points relative to center of page */
-            this.complex_points.push(
+            /* record points relative to fourier center */
+            complex_points.push(
                 new Complex(
-                    this.drawing[i][0] - window.innerWidth / 2,
-                    this.drawing[i][1] - window.innerHeight / 2
+                    this.drawing[i][0] - this.center[0],
+                    this.drawing[i][1] - this.center[1]
                 )
             );
-        this.fourier = this.dft(this.complex_points);
+        this.fourier = this.dft(complex_points);
         this.fourier.sort((a, b) => b.amp - a.amp);
     }
 }
