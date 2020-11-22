@@ -15,6 +15,7 @@ class Controller {
 
         /* create model */
         this.model = new Model(center);
+        this.model.elongate();
 
         /* create view */
         this.view = new View(this.model);
@@ -31,7 +32,7 @@ class Controller {
         this.view.clear(this.view.blackVal);
 
         /* draw original path */
-        this.view.drawPath(this.model.drawing);
+        // this.view.drawPath(this.model.drawing);
 
         /* draw new partial fourier path */
         this.view.drawPartialPath(this.model.pathBeingDrawn);

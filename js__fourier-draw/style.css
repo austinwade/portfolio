@@ -3,13 +3,13 @@ html, body {
   padding: 0;
   font-family: sans-serif;
   overflow: hidden;
+  background:#000;
 }
 canvas {
   display: block;
 }
 
 #drawHere {
-    background:#000;
     width:500px;
     height:500px;
 }
