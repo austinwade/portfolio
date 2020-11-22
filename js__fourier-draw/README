@@ -1,4 +1,4 @@
 Performs FFT on user drawing.
 
 Production:
-http://fourier-draw.s3-website-us-west-2.amazonaws.com/
+https://s3-us-west-2.amazonaws.com/fourier-draw/index.html

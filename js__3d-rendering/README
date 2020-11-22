@@ -1,4 +1,4 @@
 Renders 3d points and lines using JS.
 
 Production:
-http://3d-js.s3-website-us-west-2.amazonaws.com/
+https://s3-us-west-2.amazonaws.com/3d-js/index.html

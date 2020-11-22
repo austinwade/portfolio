@@ -4,22 +4,20 @@ import { sphere, cube } from "./data.js";
 
 // main shape object for one 3dc shape
 class Model {
+    // we're going to transform our 3d shape to 2d and store here
+    perspX = [];
+    perspY = [];
+    // camera location
+    cam = [0, 0, -500];
+    // viewing angle
+    H = Math.tan(Math.PI / 4);
+
     constructor(obj, SQ_SIZE) {
         // import data
         this.X = obj.X;
         this.Y = obj.Y;
         this.Z = obj.Z;
         this.lines = obj.lines;
-
-        // camera location
-        this.cam = [0, 0, -500];
-
-        // viewing angle
-        this.H = Math.tan(Math.PI / 4);
-
-        // we're going to transform our 3d shape to 2d and store here
-        this.perspX = [];
-        this.perspY = [];
 
         this.SQ_SIZE = SQ_SIZE;
     }
@@ -75,9 +73,9 @@ class Model {
                 smallestZ = this.Z[i];
         }
 
-        let dX = -smallestX - (biggestX - smallestX) / 2;
-        let dY = -smallestY - (biggestY - smallestY) / 2;
-        let dZ = -smallestZ - (biggestZ - smallestZ) / 2;
+        let dX = -(biggestX + smallestX) / 2;
+        let dY = -(biggestY + smallestY) / 2;
+        let dZ = -(biggestZ + smallestZ) / 2;
 
         this.translate(dX, dY, dZ);
         return [-dX, -dY, -dZ];
@@ -120,12 +118,12 @@ class Model {
     }
 
     scale() {
-        let smallestX;
-        let smallestY;
-        let smallestZ;
-        let biggestX;
-        let biggestY;
-        let biggestZ;
+        let smallestX = null;
+        let smallestY = null;
+        let smallestZ = null;
+        let biggestX = null;
+        let biggestY = null;
+        let biggestZ = null;
         for (let i = 0; i < this.X.length; i++) {
             if (this.X[i] > biggestX || biggestX == null) biggestX = this.X[i];
             else if (this.X[i] < smallestX || smallestX == null)
@@ -141,9 +139,9 @@ class Model {
         }
 
         for (let i = 0; i < this.X.length; i++) {
-            this.X[i] *= 1 / biggestX;
-            this.Y[i] *= 1 / biggestY;
-            this.Z[i] *= 1 / biggestZ;
+            this.X[i] *= this.SQ_SIZE / 2 / (biggestX - smallestX);
+            this.Y[i] *= this.SQ_SIZE / 2 / (biggestY - smallestY);
+            this.Z[i] *= this.SQ_SIZE / 2 / (biggestZ - smallestZ);
         }
     }
 }
@@ -160,13 +158,26 @@ class View {
         this.SQ_SIZE = SQ_SIZE;
     }
 
-    draw() {
+    drawWireframe() {
         this.ctx.clearRect(0, 0, this.SQ_SIZE, this.SQ_SIZE);
 
+        // // center dot
+        // this.ctx.fillStyle = "rgb(0,0,0)";
+        // this.ctx.beginPath();
+        // this.ctx.arc(
+        //     this.SQ_SIZE / 2,
+        //     this.SQ_SIZE / 2,
+        //     10,
+        //     0,
+        //     2 * Math.PI,
+        //     false
+        // );
+        // this.ctx.fill();
+
         for (let i = 0; i < this.model.lines.length; i++) {
-            this.ctx.fillStyle = Math.floor(Math.random() * 16777215).toString(
-                16
-            );
+            // this.ctx.fillStyle = Math.floor(Math.random() * 16777215).toString(
+            //     16
+            // );
             this.ctx.beginPath();
             this.ctx.moveTo(
                 this.model.perspX[this.model.lines[i][0]],
@@ -185,9 +196,9 @@ class View {
             this.ctx.stroke();
         }
 
-        for (let i = 0; i < this.model.X.length; i++) {
-            this.ctx.fillRect(this.model.perspX[i], this.model.perspY[i], 1, 1);
-        }
+        // for (let i = 0; i < this.model.X.length; i++) {
+        //     this.ctx.fillRect(this.model.perspX[i], this.model.perspY[i], 1, 1);
+        // }
     }
 }
 
@@ -197,7 +208,7 @@ class Controller {
 
         /* instantiate model */
         this.model = new Model(sphere, this.SQ_SIZE);
-        this.model = new Model(cube, this.SQ_SIZE);
+        // this.model = new Model(cube, this.SQ_SIZE);
 
         // instantiate view
         this.view = new View(this.model, this.SQ_SIZE);
@@ -206,17 +217,7 @@ class Controller {
         this.model.center();
         this.model.scale();
 
-        this.view.ctx.fillStyle = "rgb(0,0,0)";
-        this.view.ctx.beginPath();
-        this.view.ctx.arc(
-            this.view.ctx.width / 2,
-            this.view.ctx.height / 2,
-            10,
-            0,
-            2 * Math.PI,
-            false
-        );
-        this.view.ctx.fill();
+        this.model.rotateY(Math.PI / 8);
 
         // call our update function every x milliseconds
         setInterval(() => {
@@ -225,11 +226,11 @@ class Controller {
     }
 
     update() {
-        this.model.rotateY(Math.PI / 512);
+        this.model.rotateY(Math.PI / 1024);
         this.model.rotateX(Math.PI / 512);
         this.model.perspective();
 
-        this.view.draw();
+        this.view.drawWireframe();
     }
 }
 
