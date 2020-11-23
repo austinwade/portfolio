@@ -103,34 +103,34 @@ class Field {
 class View {
     ctx = null;
 
-    constructor(model, delta) {
+    constructor(model) {
         this.model = model;
         this.canvas = document.querySelector("canvas");
         this.canvas.width =
-            window.innerWidth - delta - (window.innerWidth % delta);
+            window.innerWidth - this.model.delta - (window.innerWidth % this.model.delta);
         this.canvas.height =
-            window.innerHeight - delta - (window.innerHeight % delta);
+            window.innerHeight - this.model.delta - (window.innerHeight % this.model.delta);
         this.ctx = this.canvas.getContext("2d");
     }
 
     drawSnake() {
         // draw segments (not head)
-        field.ctx.fillStyle = "#93ffa7";
-        for (let i = 1; i < this.segments.length; i++) {
-            field.ctx.fillRect(
-                this.segments[i][0],
-                this.segments[i][1],
-                this.delta,
-                this.delta
+        this.ctx.fillStyle = "#93ffa7";
+        for (let i = 1; i < this.model.snake.segments.length; i++) {
+            this.ctx.fillRect(
+                this.model.snake.segments[i][0],
+                this.model.snake.segments[i][1],
+                this.model.delta,
+                this.model.delta
             );
         }
         // draw head
-        field.ctx.fillStyle = "#62c147";
-        field.ctx.fillRect(
-            this.segments[0][0],
-            this.segments[0][1],
-            field.delta,
-            field.delta
+        this.ctx.fillStyle = "#62c147";
+        this.ctx.fillRect(
+            this.model.snake.segments[0][0],
+            this.model.snake.segments[0][1],
+            this.model.delta,
+            this.model.delta
         );
     }
 
@@ -152,14 +152,10 @@ class View {
 
                 this.ctx.fillRect(
                     field.snacks[i][0],
-                    this.snacks[i][1],
-                    field.delta,
-                    field.delta
+                    this.model.field.snacks[i][1],
+                    this.model.delta,
+                    this.model.delta
                 );
-
-                // this.ctx.beginPath();
-                // this.ctx.arc(field.snacks[i][0]+field.delta/2, this.snacks[i][1]+field.delta/2, field.delta/2.5, 0, 2 * Math.PI, false);
-                // this.ctx.fill();
             } else {
                 // draw snack objects
                 this.ctx.fillStyle = "#44a6fc";
@@ -167,13 +163,9 @@ class View {
                 this.ctx.fillRect(
                     this.model.field.snacks[i][0],
                     this.model.field.snacks[i][1],
-                    this.model.field.delta,
-                    this.model.field.delta
+                    this.model.delta,
+                    this.model.delta
                 );
-
-                // this.ctx.beginPath();
-                // this.ctx.arc(field.snacks[i][0]+field.delta/2, this.snacks[i][1]+field.delta/2, field.delta/2.5, 0, 2 * Math.PI, false);
-                // this.ctx.fill();
             }
         }
     }
@@ -184,36 +176,28 @@ class View {
             this.ctx.fillRect(
                 this.model.field.obstacles[i][0],
                 this.model.field.obstacles[i][1],
-                this.model.field.delta,
-                this.model.field.delta
+                this.model.delta,
+                this.model.delta
             );
         }
     }
 
     drawLines() {
-        this.ctx = field.context;
         this.ctx.strokeStyle = "#222222";
-        for (let i = 0; i < field.canvas.width / field.delta; i++) {
+        for (let i = 0; i < this.canvas.width / this.model.delta; i++) {
             this.ctx.beginPath();
-            this.ctx.moveTo(i * field.delta, 0);
-            this.ctx.lineTo(i * field.delta, field.canvas.height);
+            this.ctx.moveTo(i * this.model.delta, 0);
+            this.ctx.lineTo(i * this.model.delta, this.canvas.height);
             this.ctx.stroke();
         }
-        for (let i = 0; i < field.canvas.height / field.delta; i++) {
+        for (let i = 0; i < this.canvas.height / this.model.delta; i++) {
             this.ctx.beginPath();
-            this.ctx.moveTo(0, i * field.delta);
-            this.ctx.lineTo(field.canvas.width, i * field.delta);
+            this.ctx.moveTo(0, i * this.model.delta);
+            this.ctx.lineTo(this.canvas.width, i * this.model.delta);
             this.ctx.stroke();
         }
     }
 }
-
-// function contains(array, thing) {
-//     for (let i = 0; i < array.length; i++) {
-//         if (array[i][0] == thing[0] && array[i][1] == thing[1]) return i;
-//     }
-//     return -1;
-// }
 
 class Snake {
     speedX = 0;
@@ -389,18 +373,18 @@ class Controller {
         // if the game is running,
         // set pauseTime; stop interval; update snack expirations
         if (this.interval) {
-            field.pauseTime = new Date().getTime() / 1000;
+            this.pauseTime = new Date().getTime() / 1000;
             clearInterval(this.interval);
             this.interval = null;
-            for (let i = 0; i < field.snacks.length; i++) {
-                field.snacks[i][2] -= new Date().getTime() / 1000;
+            for (let i = 0; i < this.model.field.snacks.length; i++) {
+                this.model.field.snacks[i][2] -= new Date().getTime() / 1000;
             }
             // if game is not running,
             // update snack expirations and
             // call Bill Maher to StartTheClock
         } else {
-            for (let i = 0; i < field.snacks.length; i++) {
-                field.snacks[i][2] += new Date().getTime() / 1000;
+            for (let i = 0; i < this.model.field.snacks.length; i++) {
+                this.model.field.snacks[i][2] += new Date().getTime() / 1000;
             }
             this.startClock();
         }
@@ -408,7 +392,7 @@ class Controller {
 
     startClock() {
         this.interval = setInterval(() => {
-            updateGameArea();
+            this.updateGameArea();
         }, 125);
         this.pauseTime = null;
     }
@@ -453,14 +437,14 @@ class Controller {
             if ([32, 37, 38, 39, 40, 65, 68, 83, 87].indexOf(e.keyCode) > -1) {
                 e.preventDefault();
                 if (e.keyCode === 32) {
-                    this.field.pause();
+                    this.pause();
                     return;
                 } else {
                     // if clock isn't already started, start it
                     if (!this.interval) {
                         this.startClock();
-                        for (let i = 0; i < this.field.snacks.length; i++) {
-                            this.field.snacks[i][2] =
+                        for (let i = 0; i < this.model.field.snacks.length; i++) {
+                            this.model.field.snacks[i][2] =
                                 new Date().getTime() / 1000;
                         }
                     }
@@ -468,14 +452,14 @@ class Controller {
             }
 
             // change snake direction if conditions are met
-            if ((mySnake.dims[0] != 0 || !mySnake.dims) && isVert(e)) {
-                mySnake.speedX = 0;
-                if (isVert(e) < 0) mySnake.speedY = mySnake.speed;
-                else mySnake.speedY = -mySnake.speed;
-            } else if ((mySnake.dims[1] != 0 || !mySnake.dims) && isHoriz(e)) {
-                mySnake.speedY = 0;
-                if (isHoriz(e) < 0) mySnake.speedX = -mySnake.speed;
-                else mySnake.speedX = mySnake.speed;
+            if ((this.model.snake.dims[0] != 0 || !this.model.snake.dims) && this.isVert(e)) {
+                this.model.snake.speedX = 0;
+                if (this.isVert(e) < 0) this.model.snake.speedY = this.model.snake.speed;
+                else this.model.snake.speedY = -this.model.snake.speed;
+            } else if ((this.model.snake.dims[1] != 0 || !this.model.snake.dims) && this.isHoriz(e)) {
+                this.model.snake.speedY = 0;
+                if (this.isHoriz(e) < 0) this.model.snake.speedX = -this.model.snake.speed;
+                else this.model.snake.speedX = this.model.snake.speed;
             }
         };
     }
