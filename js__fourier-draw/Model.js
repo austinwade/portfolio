@@ -51,7 +51,7 @@ export default class Model {
                 phase: phase,
             });
         }
-
+        // console.log(dft_points)
         return dft_points;
     }
 
@@ -80,28 +80,18 @@ export default class Model {
      * elongate() - Quadruple number of points by averaging between
      * 
      */
-    elongate() {
+    elongate(denominator) {
         const elongated = [];
         for (let i = 0; i < this.drawing.length - 1; i += 1) {
             elongated.push(this.drawing[i]);
-            elongated.push([
-                this.drawing[i][0] +
-                    (this.drawing[i + 1][0] - this.drawing[i][0]) * (1 / 4),
-                this.drawing[i][1] +
-                    (this.drawing[i + 1][1] - this.drawing[i][1]) * (1 / 4),
-            ]);
-            elongated.push([
-                this.drawing[i][0] +
-                    (this.drawing[i + 1][0] - this.drawing[i][0]) * (2 / 4),
-                this.drawing[i][1] +
-                    (this.drawing[i + 1][1] - this.drawing[i][1]) * (2 / 4),
-            ]);
-            elongated.push([
-                this.drawing[i][0] +
-                    (this.drawing[i + 1][0] - this.drawing[i][0]) * (3 / 4),
-                this.drawing[i][1] +
-                    (this.drawing[i + 1][1] - this.drawing[i][1]) * (3 / 4),
-            ]);
+            for (let j=1; j<denominator; j++) {
+                elongated.push([
+                    this.drawing[i][0] +
+                        (this.drawing[i + 1][0] - this.drawing[i][0]) * (j / denominator),
+                    this.drawing[i][1] +
+                        (this.drawing[i + 1][1] - this.drawing[i][1]) * (j / denominator),
+                ]);
+            }
         }
         this.drawing = elongated;
     }
@@ -117,6 +107,7 @@ export default class Model {
                 )
             );
         this.fourier = this.dft(complex_points);
+        // this.fourier.sort((a, b) => b.freq - a.freq);
         this.fourier.sort((a, b) => b.amp - a.amp);
     }
 }

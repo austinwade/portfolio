@@ -15,7 +15,7 @@ class Controller {
 
         /* create model */
         this.model = new Model(center);
-        this.model.elongate();
+        // this.model.elongate(8);
 
         /* create view */
         this.view = new View(this.model);
@@ -34,9 +34,6 @@ class Controller {
         /* draw original path */
         // this.view.drawPath(this.model.drawing);
 
-        /* draw new partial fourier path */
-        this.view.drawPartialPath(this.model.pathBeingDrawn);
-
         /* calculate epicycles */
         let epicycles = this.model.epicycles(
             this.model.center[0],
@@ -51,6 +48,9 @@ class Controller {
         /* push last epicycle to pathBeingDrawn */
         this.model.pathBeingDrawn.push(epicycles[epicycles.length - 1]);
 
+        /* draw new partial fourier path */
+        this.view.drawPartialPath(this.model.pathBeingDrawn);
+
         /* update time */
         this.model.time += (2 * Math.PI) / this.model.fourier.length;
 
@@ -64,7 +64,6 @@ class Controller {
     }
 
     draw() {
-        this.mouseIsMoving = false;
         this.model.runDFT();
         this.interval = setInterval(() => {
             this.drawFourier();
@@ -105,7 +104,8 @@ class Controller {
 
         /* mouseup handler */
         this.view.canvas.addEventListener("mouseup", () => {
-            this.model.elongate(this.drawing);
+            this.model.elongate(4);
+            this.mouseIsMoving = false;
             this.draw();
         });
     }
